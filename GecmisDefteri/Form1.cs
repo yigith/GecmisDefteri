@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,21 +28,33 @@ namespace GecmisDefteri
             string ara = txtAra.Text.Trim().ToLower();
             bool sadeceFav = chkSadeceFavoriler.Checked;
 
-            lstMesajlar.DataSource = _mesajlar
+            List<Mesaj> sonuc = _mesajlar
                 .Where(x => (!sadeceFav || x.YildizliMi) &&
                             (ara == "" || x.Icerik.ToLower().Contains(ara))
                  )
+                //.OrderByDescending(x => x.Zaman) // LINQ İLE SIRALAMA
                 .ToList();
+
+            sonuc.Sort(); // ICOMPARABLE YARDIMIYLA SIRALAMA
+            lstMesajlar.DataSource = sonuc;
         }
 
         private void VerileriOku()
         {
-            _mesajlar = new List<Mesaj>();
+            try
+            {
+                string json = File.ReadAllText("veri.json");
+                _mesajlar = JsonSerializer.Deserialize<List<Mesaj>>(json);
+            }
+            catch (Exception)
+            {
+                _mesajlar = new List<Mesaj>();
+            }
         }
 
         private void btnEkle_Click(object sender, EventArgs e)
         {
-            var icerik = txtMesaj.Text;
+            var icerik = txtMesaj.Text.Trim();
 
             if (icerik == "")
             {
@@ -110,6 +124,10 @@ namespace GecmisDefteri
             {
                 SeciliFavoriGuncelle();
             }
+            else if (e.ClickedItem == tsmiDuzenle)
+            {
+                SeciliyiDuzenle();
+            }
         }
 
         private void SeciliFavoriGuncelle()
@@ -130,6 +148,38 @@ namespace GecmisDefteri
         private void txtAra_TextChanged(object sender, EventArgs e)
         {
             Listele();
+        }
+
+        private void lstMesajlar_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            // tıkladığı noktadaki öğenin indeksi
+            int index = lstMesajlar.IndexFromPoint(e.Location);
+
+            if (index > -1 && e.Button == MouseButtons.Left)
+            {
+                SeciliyiDuzenle();
+            }
+        }
+
+        private void SeciliyiDuzenle()
+        {
+            if (lstMesajlar.SelectedIndex > -1)
+            {
+                Mesaj mesaj = (Mesaj)lstMesajlar.SelectedItem;
+                new DuzenleForm(mesaj).ShowDialog();
+                Listele();
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            VerileriKaydet();
+        }
+
+        private void VerileriKaydet()
+        {
+            string json = JsonSerializer.Serialize(_mesajlar);
+            File.WriteAllText("veri.json", json);
         }
     }
 }

@@ -34,6 +34,7 @@ namespace GecmisDefteri
             this.cmsMesajlar = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiSil = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiFavori = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiDuzenle = new System.Windows.Forms.ToolStripMenuItem();
             this.txtMesaj = new System.Windows.Forms.TextBox();
             this.btnEkle = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -56,15 +57,17 @@ namespace GecmisDefteri
             this.lstMesajlar.Size = new System.Drawing.Size(588, 364);
             this.lstMesajlar.TabIndex = 0;
             this.lstMesajlar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstMesajlar_KeyDown);
+            this.lstMesajlar.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstMesajlar_MouseDoubleClick);
             this.lstMesajlar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lstMesajlar_MouseDown);
             // 
             // cmsMesajlar
             // 
             this.cmsMesajlar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSil,
-            this.tsmiFavori});
+            this.tsmiFavori,
+            this.tsmiDuzenle});
             this.cmsMesajlar.Name = "cmsMesajlar";
-            this.cmsMesajlar.Size = new System.Drawing.Size(182, 48);
+            this.cmsMesajlar.Size = new System.Drawing.Size(182, 70);
             this.cmsMesajlar.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.cmsMesajlar_ItemClicked);
             // 
             // tsmiSil
@@ -78,6 +81,12 @@ namespace GecmisDefteri
             this.tsmiFavori.Name = "tsmiFavori";
             this.tsmiFavori.Size = new System.Drawing.Size(181, 22);
             this.tsmiFavori.Text = "Favorilere Ekle/Çıkar";
+            // 
+            // tsmiDuzenle
+            // 
+            this.tsmiDuzenle.Name = "tsmiDuzenle";
+            this.tsmiDuzenle.Size = new System.Drawing.Size(181, 22);
+            this.tsmiDuzenle.Text = "Düzenle";
             // 
             // txtMesaj
             // 
@@ -155,6 +164,7 @@ namespace GecmisDefteri
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Geçmiş Defteri";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.cmsMesajlar.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -173,6 +183,7 @@ namespace GecmisDefteri
         private System.Windows.Forms.CheckBox chkSadeceFavoriler;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtAra;
+        private System.Windows.Forms.ToolStripMenuItem tsmiDuzenle;
     }
 }
 
